@@ -30,9 +30,22 @@ return inquirer
             }
         },
         {
-            type: "input",
-            name:"about",
-            message:"Provide some information about yourself:"
+            type: "confirm",
+            name:"confirmAbout",
+            message:"Will you like to enter some information about your self for an About section?",
+            default: true
+        },
+        {
+            type:'input',
+            name:'about',
+            message: 'Provide some information about yourself:',
+            when: ({confirmAbout})=>{
+                if(confirmAbout){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
         }
 
     ])
@@ -65,7 +78,7 @@ const promptProject = portfolioData =>{
         {
             type:"input",
             name:"desciption",
-            message:"Provide a description of the project (required)."
+            message:"Provide a description of the project (required).",
             validate: projectDescriptionInput =>{
                 if(projectDescriptionInput){
                     return true;
