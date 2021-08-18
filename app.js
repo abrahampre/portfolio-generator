@@ -1,20 +1,14 @@
-const profileDataArgs = process.argv.slice(2,process.argv.length);
-console.log(profileDataArgs);
+const fs = require('fs'); //
+
+const generatePage = require('./src/page-template'); // 
+
+const profileDataArgs = process.argv.slice(2);//
 
 
-const printProfileData = (profileDataArr) => {
+const [name, github] = profileDataArgs;//
 
-    // This..
+fs.writeFile('index.html', generatePage(name,github), err => {
+    if(err) throw err;
 
-    for(let i=0; i<profileDataArr.length; i++){
-        console.log(profileDataArr[i]);
-    }
-    console.log('==============');
-    //Is the same as this
-    profileDataArr.forEach((profileItem)=>{
-        console.log(profileItem);
-    });
-};
-
-printProfileData(profileDataArgs);
-
+    console.log('portfolio complete! check out index.html to see the output!')
+});
