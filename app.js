@@ -1,7 +1,10 @@
+const fs = require('fs');
 const inquirer = require('inquirer');
+const generatePage = require('./src/page-template');
+
 
 const promptUser = () => {
-return inquirer
+  return inquirer
     .prompt([
         {
             type: "input",
@@ -52,8 +55,9 @@ return inquirer
 };
 const promptProject = portfolioData =>{
     //IF theres no 'projects' array property, create one
-    if(!portfolioData.projects){
-        portfolioData.projects = [];
+    if(!portfolioData.projects){ //if the portfolioData.projects doesnt exist... then create one. this is to run only in the first round and dont empty on each round
+        portfolioData.projects = []; /// we jsut added the the projects array to
+        //the portfolio data object.
     } ;
 
     console.log(`
@@ -77,7 +81,7 @@ const promptProject = portfolioData =>{
         },
         {
             type:"input",
-            name:"desciption",
+            name:"description",
             message:"Provide a description of the project (required).",
             validate: projectDescriptionInput =>{
                 if(projectDescriptionInput){
@@ -120,7 +124,7 @@ const promptProject = portfolioData =>{
             default: false
         }
     ])
-    .then(projectData =>{
+    .then(projectData =>{  ///Despues de el then.... viene la informacion O RESPUESTAS DEL INQUIRER osea, seria projectData en este caso
         portfolioData.projects.push(projectData);
         if(projectData.confirmAddProject){
             return promptProject(portfolioData);
@@ -135,16 +139,16 @@ const promptProject = portfolioData =>{
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData);
-  });
+    const pageHTML = generatePage(portfolioData);
+    //console.log(portfolioData); // imprime todo los inputs porque en porfolio data es el blank array
+    fs.writeFile('index.html', pageHTML, err => {
+        if(err) throw err;
+    
+        console.log('portfolio complete! check out index.html to see the output!')
+    });
+});
 
 
-// const fs = require('fs'); //
-// const generatePage = require('./src/page-template'); // 
-
-// //const profileDataArgs = process.argv.slice(2);//
-
-// const pageHTML = generatePage(name, github);
 
 
 // fs.writeFile('index.html', pageHTML, err => {
@@ -152,4 +156,8 @@ promptUser()
 
 //     console.log('portfolio complete! check out index.html to see the output!')
 // });
+
 // console.log(inquirer);no
+//const profileDataArgs = process.argv.slice(2);//
+
+// const pageHTML = generatePage(name, github)
